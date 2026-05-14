@@ -249,7 +249,7 @@
             </button>
             <div class="hero-section">
                 <div class="cover-image-container">
-                    <img class="cover-image" src="0. logo.webp" alt="CATi Cover">
+                    <img class="cover-image" id="coverImage" src="0. logo.webp" alt="CATi Cover">
                 </div>
                 <div class="intro-section">
                     <p><span class="intro-highlight">CATi (Cognitive Architecture Type Indicator)</span> 是一套基于认知神经科学与计算心理学逻辑的心智性能压测系统。与传统的 MBTI 性格测试不同，CATi 不关注你的"性格倾向"，而是探测你大脑这台"生物计算机"的<span class="intro-highlight">底层硬件配置</span>、<span class="intro-highlight">算力分配模式</span>以及<span class="intro-highlight">系统防火墙强度</span>。</p>
@@ -656,6 +656,20 @@
                 if (e.target === $('galleryModal')) { closeGalleryModal(); }
             });
             $('backHomeBtn').addEventListener('click', goHome);
+
+            // 预加载：封面图加载完后，依次预加载1~16号人物图
+            $('coverImage').addEventListener('load', function coverLoaded() {
+                var codes = ['AAAA', 'AAAB', 'AABA', 'AABB', 'ABAA', 'ABAB', 'ABBA', 'ABBB', 'BAAA', 'BAAB', 'BABA', 'BABB', 'BBAA', 'BBAB', 'BBBA', 'BBBB'];
+                var idx = 0;
+                function preloadNext() {
+                    if (idx >= codes.length) return;
+                    var img = new Image();
+                    img.onload = function() { idx++; preloadNext(); };
+                    img.src = results[codes[idx]].image;
+                }
+                preloadNext();
+            });
+
             if (!checkUrlParams()) {
                 showPage('homePage');
             }
